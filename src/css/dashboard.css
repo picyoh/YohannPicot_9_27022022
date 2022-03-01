@@ -60,6 +60,9 @@
   cursor: pointer;
 }
 
+.active-bill{
+  background: #2A2B35;
+}
 .bill-card-name-container {
   display: flex;
   justify-content: space-between;

@@ -90,13 +90,18 @@ export default class {
     // if (this.id === undefined || this.id !== bill.id) this.id = bill.id
     // if (this.counter % 2 === 0) {
 
+    const isActive = $(`#open-bill${bill.id}`).hasClass('active-bill');
+
       bills.forEach(b => {
-        $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
+        if(b.id !== bill.id ){
+          $(`#open-bill${b.id}`).removeClass('active-bill')
+        }
       })
-      $(`#open-bill${bill.id}`).css({ background: '#2A2B35' })
-      $('.dashboard-right-container div').html(DashboardFormUI(bill))
-      $('.vertical-navbar').css({ height: '150vh' })
-      this.counter ++
+      if(!isActive){
+        $(`#open-bill${bill.id}`).addClass('active-bill');
+        $('.dashboard-right-container div').html(DashboardFormUI(bill))
+        $('.vertical-navbar').css({ height: '150vh' })
+      }
     // } 
     // else {
     //   $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' })
