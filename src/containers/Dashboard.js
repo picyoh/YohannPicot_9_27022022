@@ -91,6 +91,13 @@ export default class {
     // if (this.counter % 2 === 0) {
 
     const isActive = $(`#open-bill${bill.id}`).hasClass('active-bill');
+    if (isActive){
+      $(`#open-bill${bill.id}`).removeClass('active-bill')
+      $('.dashboard-right-container div').html(`
+      <div id="big-billed-icon" data-testid="big-billed-icon"> ${BigBilledIcon} </div>
+    `)
+    $('.vertical-navbar').css({ height: '120vh' })
+    }
 
       bills.forEach(b => {
         if(b.id !== bill.id ){
