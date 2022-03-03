@@ -33,6 +33,7 @@ describe("Given I am connected as an employee", () => {
       // expect(windowIcon).toHaveClass('active-icon');
 
     })
+
     test("Then bills should be ordered from earliest to latest", () => {
       document.body.innerHTML = BillsUI({ data: bills })
       const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML)
@@ -40,7 +41,8 @@ describe("Given I am connected as an employee", () => {
       const datesSorted = [...dates].sort(antiChrono)
       expect(dates).toEqual(datesSorted)
     })
-    test("Then I should add a new Bill", async ()=>{
+
+    test("Then I should add a new Bill", () => {
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
       window.localStorage.setItem('user', JSON.stringify({
         type: 'Employee'
@@ -61,7 +63,31 @@ describe("Given I am connected as an employee", () => {
       expect(handleClickNewBill).toHaveBeenCalled()
       const formNewBill = screen.getByTestId('form-new-bill')
       expect(formNewBill).toBeTruthy()
+    })
 
+    test("Then I should display a bill file", () => {
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
+      document.body.innerHTML = BillsUI({data: bills})
+      
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+      const store = null
+      const billsClass = new Bills({
+        document, onNavigate, store, localStorage: window.localStorage
+      })
+      const iconEye = screen.getAllByTestId('icon-eye')
+      const handleClickIconEye = jest.fn((e)=> billsClass.handleClickIconEye)
+      iconEye.forEach(icon => {
+        icon.addEventListener('click', handleClickIconEye)
+        fireEvent.click(icon)
+      })
+      expect(handleClickIconEye).toHaveBeenCalled()
+      const modal = screen.getByTestId('modaleFileEmployee')
+      expect(modal).toBeTruthy()
     })
   })
 })
