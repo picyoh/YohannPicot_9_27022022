@@ -105,46 +105,10 @@ describe("Given I am connected as an employee", () => {
 
         expect(handleChangeFile).toHaveBeenCalled();
       });
-
-      test("an error occurs", () => {
-        jest.spyOn(mockStore, "bills");
-        jest.spyOn(console, "error");
-
-        const store = mockStore;
-        const onNavigate = (pathname) => {
-          document.body.innerHTML = ROUTES({ pathname });
-        };
-        const newBillClass = new NewBill({
-          document,
-          onNavigate,
-          store,
-          localStorage: window.localStorage,
-        });
-        
-        mockStore.bills.mockImplementationOnce(() => {
-          return {
-            create: () => {
-              return Promise.reject(new Error("Erreur 500"));
-            },
-          };
-        });
-
-        // // upload a file
-        // const file = new File(["(⌐□_□)"], "chucknorris.png", {
-        //   type: "image/png",
-        // });
-        // const fileInput = screen.getByTestId("file");
-        // const handleChangeFile = jest.fn(newBillClass.handleChangeFile);
-        // fileInput.addEventListener("change", handleChangeFile);
-        // fireEvent.change(fileInput, { target: { files: [file] } });
-        
-        // return expect(console.error).toBeCalled();
-      });
     });
 
     describe("When I submit a completed bill", () => {
       test("Then a new bill is created on Bill page", async () => {
-        jest.spyOn(mockStore, "bills");
         const onNavigate = (pathname) => {
           document.body.innerHTML = ROUTES({ pathname });
         };
@@ -161,12 +125,12 @@ describe("Given I am connected as an employee", () => {
         const form = screen.getByTestId("form-new-bill");
         form.addEventListener("submit", handleSubmit);
         fireEvent.submit(form);
-        // TODO: mock updatebill et set bills a la place
 
         await waitFor(() => screen.getByTestId("tbody"));
         const tbody = screen.getByTestId("tbody");
         expect(tbody).toBeTruthy();
       });
     });
+    
   });
 });
