@@ -108,7 +108,42 @@ describe("Given I am connected as an employee", () => {
         expect(mockBillSpy).toHaveBeenCalled()
       });
     });    
+    describe("When I submit empty FormData", () => {
+      test("Then an error occurs", () => {
+        jest.spyOn(mockStore, "bills");
+        const mockCreateBill = mockStore.bills.mockImplementationOnce(() => {
+          return {
+            create: () => {
+              return Promise.reject(new Error("Error 404"))
+            }
+          }
+        })
 
+        const onNavigate = (pathname) => {
+          document.body.innerHTML = ROUTES({ pathname });
+        };
+        const store = mockStore;
+
+        const newBillClass = new NewBill({
+          document,
+          onNavigate,
+          store,
+          localStorage: window.localStorage,
+        });
+        // upload a file
+        const file = new File(["(⌐□_□)"], "chucknorris.png", {
+          type: "image/png",
+        });
+
+        const fileInput = screen.getByTestId("file");
+
+        const handleChangeFile = jest.fn(newBillClass.handleChangeFile);
+        fileInput.addEventListener("change", handleChangeFile);
+        fireEvent.change(fileInput, { target: { files: [file] } });
+        expect(handleChangeFile).toHaveBeenCalled();
+        expect(mockCreateBill).rejects.toEqual({ Error : "Error 404" })
+      });
+    });
     describe("When I submit a completed bill", () => {
       test("Then a new bill is created on Bill page", async () => {
         const onNavigate = (pathname) => {
