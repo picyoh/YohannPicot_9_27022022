@@ -80,7 +80,8 @@ describe("Given I am connected as an employee", () => {
     });
 
     describe("When I submit an image", () => {
-      test("Then file is updated", () => {
+      test("Then a new Bill is created and posted", () => {
+        const mockBillSpy = jest.spyOn(mockStore, "bills");
         const onNavigate = (pathname) => {
           document.body.innerHTML = ROUTES({ pathname });
         };
@@ -104,8 +105,9 @@ describe("Given I am connected as an employee", () => {
         fireEvent.change(fileInput, { target: { files: [file] } });
 
         expect(handleChangeFile).toHaveBeenCalled();
+        expect(mockBillSpy).toHaveBeenCalled()
       });
-    });
+    });    
 
     describe("When I submit a completed bill", () => {
       test("Then a new bill is created on Bill page", async () => {
